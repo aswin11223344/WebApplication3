@@ -1,0 +1,177 @@
+﻿@model WebApplication3.Models.Reg;
+<h3 style="color: white;text-align: center;">Registration</h3>
+<h4 style="color: white;text-align: center;">It's just a matter of 80 days to an IT job!</h4>
+<section class="container ">
+    <div class="card">
+        <div class="card-header  text-white text-uppercase">
+          
+        </div>
+        <div class="card-body container">
+            <form asp-controller="Reg" asp-action="Reg" method="post" enctype="multipart/form-data">
+                <div class=" row mt-5">
+                    <div class="mb-3 col-6">
+                        <label class="form-label" asp-for="Name">Name:</label>
+                        <input type="text" name="Name" asp-for="Name" class="form-control">
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+
+
+                    <div class="mb-3 col-6">
+                        <label class="form-label" asp-for="Age">Age:</label>
+                        <input type="number" name="Age" asp-for="Age" class="form-control">
+                        <span asp-validation-for="Age" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="mb-3 col">
+                        <label class="form-label" asp-for="Country">Country:</label>
+                        <select id="country" name="country" asp-for="Country" class="form-select" onchange="updateStates()">
+                            <option value="" disabled selected>Select Country</option>
+                            <option value="India">India</option>
+                            <option value="USA">USA</option>
+                        </select>
+                        <span asp-validation-for="Country" class="text-danger"></span>
+                    </div>
+
+                </div>
+                <div class="row">
+
+                    <div class="mb-3 col">
+                        <label class="form-label" asp-for="State">State:</label>
+                        <select id="state" name="state" asp-for="State" class="form-select" onchange="updateCities()">
+                            <option value="" disabled selected>Select State</option>
+                        </select>
+                        <span asp-validation-for="State" class="text-danger"></span>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="mb-3 col">
+                        <label class="form-label" asp-for="City">City:</label>
+                        <select id="city" name="city" class="form-select" asp-for="City">
+                            <option value="" disabled selected>Select City</option>
+                        </select>
+                        <span asp-validation-for="City" class="text-danger"></span>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="mb-3 col">
+                        <label class="form-label" asp-for="PhoneNumber">Phone Number:</label>
+                        <input type="tel" class="form-control" id="phoneNumber" name="phoneNumber" asp-for="PhoneNumber">
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="mb-3  col">
+                        <label class="form-label" asp-for="email">Email:</label>
+                        <input type="email" class="form-control" id="email" name="Email" asp-for="email">
+                        <span asp-validation-for="email" class="text-danger">@ViewBag.Emailmsg</span>
+                        <br />
+                        <label class="form-label">Upload Your Photo:</label>
+                        <input type="file" name="Myfile" />
+                        <span class="text-success"> @ViewBag.UploadStatus</span>
+                        <span class="text-danger"> </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Password">Password</label>
+                    <input asp-for="Password" type="password" class="form-control"  />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="form-group mt-4">
+                    <label asp-for="CPassword" class="control-label">Confirm Password</label>
+                    <input asp-for="CPassword" type="password" class="form-control" />
+                    <span asp-validation-for="CPassword" class="text-danger"></span>
+                </div>
+
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <center>
+                    <input type="submit" class="btn btn-primary col" style="width:200px" value="Submit" />
+                </center>
+
+
+            </form>
+        </div>
+
+
+
+
+    </div>
+
+
+
+
+</section>
+@section Scripts {
+    @await Html.PartialAsync("/Views/Shared/_ValidationScriptsPartial.cshtml")
+}
+
+<script>
+    const locations = {
+        "India": {
+            "Tamilnadu": ["Coimbatore", "Kanyakumari", "Tirunelveli"],
+            "Kerala": ["Trivandrum", "Kochi", "Palakkad"]
+        },
+        "USA": {
+            "Alabama": ["Birmingham", "Montgomery", "Mobile", "Huntsville"],
+            "Alaska": ["Anchorage", "Fairbanks", "Juneau", "Sitka"]
+        }
+    };
+
+    function updateStates() {
+        const countrySelect = document.getElementById("country");
+        const stateSelect = document.getElementById("state");
+        const citySelect = document.getElementById("city");
+        const selectedCountry = countrySelect.value;
+
+
+        stateSelect.innerHTML = '<option value="" disabled selected>Select State</option>';
+        citySelect.innerHTML = '<option value="" disabled selected>Select City</option>';
+
+        if (selectedCountry in locations) {
+            for (const state in locations[selectedCountry]) {
+                const option = document.createElement("option");
+                option.value = state;
+                option.text = state;
+                stateSelect.add(option);
+            }
+        }
+    }
+
+
+    function updateCities() {
+        const countrySelect = document.getElementById("country");
+        const stateSelect = document.getElementById("state");
+        const citySelect = document.getElementById("city");
+        const selectedCountry = countrySelect.value;
+        const selectedState = stateSelect.value;
+
+
+        citySelect.innerHTML = '<option value="" disabled selected>Select City</option>';
+
+
+        if (selectedCountry in locations && selectedState in locations[selectedCountry]) {
+            for (const city of locations[selectedCountry][selectedState]) {
+                const option = document.createElement("option");
+                option.value = city;
+                option.text = city;
+                citySelect.add(option);
+            }
+        }
+    }
+</script>
+
